@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Photo } from './photo/photo.entity';
-import { PhotoModule } from './photo/photo.module';
-
+import { BannerModule } from './banner/module';
+import { Banner } from './banner/entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -12,10 +11,10 @@ import { PhotoModule } from './photo/photo.module';
       username: 'zpub',
       password: 'zpub',
       database: 'products',
-      entities: ['src/**/**.entity{.ts,.js}'],
-      synchronize: true,
+      entities: [Banner],
+      synchronize: false,
     }),
-    PhotoModule,
+    BannerModule,
   ],
 })
 export class AppModule {}
