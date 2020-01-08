@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder, getConnection } from 'typeorm';
+import { Repository, UpdateResult, DeleteResult } from 'typeorm';
 import { Banner } from './entity';
-import { identifier } from '@babel/types';
 
 @Injectable()
 export class BannerService {
@@ -39,7 +38,14 @@ export class BannerService {
   }
 
   async create(createdBanner: Banner): Promise<Banner> {
-    const created = await this.bannerRepository.save(createdBanner);
-    return await this.findById(created.id);
+    return await this.bannerRepository.save(createdBanner);
+  }
+
+  async delete(id: number): Promise<DeleteResult> {
+    return await this.bannerRepository.delete(id);
+  }
+
+  async update(id: number, s: Banner): Promise<UpdateResult> {
+    return await this.bannerRepository.update(id, s);
   }
 }

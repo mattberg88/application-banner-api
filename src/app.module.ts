@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BannerModule } from './banner/module';
 import { Banner } from './banner/entity';
@@ -17,4 +17,12 @@ import { Banner } from './banner/entity';
     BannerModule,
   ],
 })
-export class AppModule {}
+export class AppModule {configure(consumer: MiddlewareConsumer) {
+  consumer.apply().forRoutes(
+    {
+      path: '/api/banner',
+      method: RequestMethod.ALL,
+    },
+  );
+}
+}

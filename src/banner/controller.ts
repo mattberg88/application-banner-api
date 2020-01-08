@@ -1,4 +1,4 @@
-import { Controller, Query, Param, Get, Post, Body } from '@nestjs/common';
+import { Controller, HttpException, HttpStatus, Query, Param, Get, Post, Body, Put, Delete } from '@nestjs/common';
 import { BannerService } from './service';
 import { Banner } from './entity';
 
@@ -25,7 +25,25 @@ export class BannerController {
 
   @Post('')
   async createBanner(@Body() body: Banner) {
-    console.log(body)
-    return await this.bannerService.create( { ...body } );
+    console.log(body);
+    try {
+    return await this.bannerService.create(body);
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+
+    }
+  }
+
+  @Put(':id')
+  async updateBanner(
+    @Param('id') id: number,
+    @Body() body: Banner,
+  ) {
+    return await this.bannerService.update(id, body);
+  }
+
+  @Delete(':id')
+  async deleteBanner(@Param('id') id: number) {
+    return await this.bannerService.delete(id);
   }
 }
