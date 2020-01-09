@@ -14,7 +14,7 @@ export class BannerService {
     return await this.bannerRepository
     .createQueryBuilder()
     .where(
-      '(dateshow <= :currentDate AND datehide> :currentDate)', { currentDate: new Date()},
+      '(startDate <= :currentDate AND endDate> :currentDate)', { currentDate: new Date()},
     )
     .getOne();
   }
@@ -23,7 +23,7 @@ export class BannerService {
     return await this.bannerRepository
     .createQueryBuilder()
     .where(
-      '(dateshow <= :date AND datehide> :date)', { date },
+      '(startDate <= :date AND endDate> :date)', { date },
     )
     .getOne();
 
