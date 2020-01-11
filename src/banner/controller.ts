@@ -10,7 +10,10 @@ export class BannerController {
   async findCurrent(): Promise<Banner> {
     return this.bannerService.findCurrent();
   }
-
+  @Get('list')
+  async findAll(): Promise<Banner[]> {
+    return this.bannerService.findAll();
+  }
   @Get('date')
   async findBydate(@Query('date') date: string,
   ): Promise<Banner> {

@@ -19,6 +19,12 @@ export class BannerService {
     .getOne();
   }
 
+  async findAll(): Promise<Banner[]> {
+    return await this.bannerRepository
+    .createQueryBuilder()
+    .getMany();
+  }
+
   async findByDate(date: Date): Promise<Banner> {
     return await this.bannerRepository
     .createQueryBuilder()
@@ -32,7 +38,7 @@ export class BannerService {
   async findById(id: number): Promise<Banner> {
     return await this.bannerRepository
     .createQueryBuilder()
-    .where('id = :id', { id })
+    .where('bannerid = :id', { id })
     .getOne();
 
   }
