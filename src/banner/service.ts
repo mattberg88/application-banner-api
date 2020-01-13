@@ -49,6 +49,7 @@ export class BannerService {
 
   async delete(id: number): Promise<DeleteResult> {
     return await this.bannerRepository.delete(id);
+
   }
 
   async update(id: number, s: Banner): Promise<UpdateResult> {
