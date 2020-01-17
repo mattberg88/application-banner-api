@@ -48,6 +48,4 @@ export class Banner {
     name: 'enddate',
   })
   endDate: Date;
-
-
 }

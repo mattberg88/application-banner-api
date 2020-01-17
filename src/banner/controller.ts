@@ -15,7 +15,7 @@ export class BannerController {
     return this.bannerService.findAll();
   }
   @Get('date')
-  async findBydate(@Query('date') date: string,
+  async findByDate(@Query('date') date: string,
   ): Promise<Banner> {
     return this.bannerService.findByDate(new Date(date));
   }
