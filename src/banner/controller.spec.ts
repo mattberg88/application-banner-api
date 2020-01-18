@@ -1,80 +1,130 @@
 import { BannerController } from './controller';
+import * as request from 'supertest';
+import { mockBanners } from '../../test/mockBanners';
 import { BannerService } from './service';
-import { Repository } from 'typeorm';
+import { Test } from '@nestjs/testing';
 import { Banner } from './entity';
-import generateBanner from '../../test/generate.banner';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { INestApplication } from '@nestjs/common';
+
 describe('BannerController', () => {
-  let bannerController: BannerController;
-  let bannerService: BannerService;
-  beforeEach(() => {
-    bannerService = new BannerService(
-      new Repository<Banner>(),
-    );
-    bannerController = new BannerController(
-      bannerService,
-    );
+  type MockType<T> = {
+    [P in keyof T]: jest.Mock<{}>;
+  };
+  // const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(() => ({
+  //   findOne: jest.fn(entity => entity),
+  //   // ...
+  // }));
+  // let repositoryMock: MockType<Repository<Banner>>;
+  let app: INestApplication;
+  const myTestsService = {
+    findCurrent: () => {
+      return mockBanners[0];
+    },
+    findAll: () => {
+      return mockBanners;
+    },
+    findByDate: () => {
+      return mockBanners[0];
+    },
+    findById: () => {
+      return mockBanners[0];
+    },
+    create: () => {
+      return {status: 'created'};
+    },
+    update: () => {
+      return {status: 'updated'};
+    },
+    delete: () => {
+      return {status: 'deleted'};
+    },
+  };
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        BannerService,
+        {
+          provide: getRepositoryToken(Banner),
+          useValue: myTestsService,
+        },
+      ],
+      controllers: [BannerController],
+    })
+    .overrideProvider(BannerService)
+    .useValue(myTestsService)
+    .compile();
+    app = module.createNestApplication();
+    await app.init();
   });
 
-  describe('findCurrent', () => {
-    it('find Banner with current date', async () => {
-      const result: Banner = generateBanner();
-      jest.spyOn(bannerService, 'findCurrent').mockImplementation(() => Promise.resolve(result));
-      expect(await bannerController.findCurrent()).toBe(result);
-    });
+  it(`/GET current banner`, async () => {
+    return await request(app.getHttpServer())
+      .get('/api/banner')
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body).toStrictEqual(mockBanners[0]);
+      });
   });
-  describe('findAll', () => {
-    it('find Banner with current date', async () => {
-      const bannerArray = [];
-      for (let i = 0; i < 10; i += 1) {
-        bannerArray.push(generateBanner());
-      }
-      jest.spyOn(bannerService, 'findAll').mockImplementation(() => Promise.resolve(bannerArray));
-      expect(await bannerController.findAll()).toBe(bannerArray);
+  it(`/GET list of all banners`, async () => {
+    return await request(app.getHttpServer())
+      .get('/api/banner/list')
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body).toStrictEqual(mockBanners);
+      });
+  });
+  it(`/GET banner by date`, async () => {
+    return await request(app.getHttpServer())
+      .get('/api/banner?date=2019-10-29')
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body).toStrictEqual(mockBanners[0]);
+      });
+  });
+  it(`/GET banner by id`, async () => {
+    return await request(app.getHttpServer())
+      .get('/api/banner/1')
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body).toStrictEqual(mockBanners[0]);
+      });
+  });
+  it(`/POST banner`, async () => {
+    return await request(app.getHttpServer())
+      .post('/api/banner')
+      .send({
+        id: null,
+        bannerId: 12156,
+        content: 'Archery',
+        startDate: '2019-10-29T00:00:00.000Z',
+        endDate: '2019-10-29T00:00:00.000Z',
+        display: true,
+      })
+      .set('Accept', 'application/json')
+      .then((res) => {
+        expect(res.status).toBe(201);
+        expect(res.body).toStrictEqual({ status: 'created' });
+      });
+  });
+  it(`/PUT banner by id`, async () => {
+    return await request(app.getHttpServer())
+      .put('/api/banner/1')
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body).toStrictEqual({ status: 'updated' });
+      });
+  });
+  it(`/DELETE banner by id`, async () => {
+    return await request(app.getHttpServer())
+      .delete('/api/banner/1')
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body).toStrictEqual({ status: 'deleted' });
+      });
+  });
 
-    });
-  });
-  describe('findByDate', () => {
-    it('find Banner with current date', async () => {
-      const result: Banner = generateBanner();
-      const targetDate = result.startDate;
-      const spy = jest.spyOn(bannerService, 'findByDate').mockImplementation(() => Promise.resolve(result));
-      await bannerController.findByDate(targetDate.toString());
-      expect(spy).toHaveBeenCalledWith(targetDate);
-    });
-  });
-  describe('findById', () => {
-    it('find Banner with current date', async () => {
-      const result: Banner = generateBanner();
-      const spy = jest.spyOn(bannerService, 'findById').mockImplementation(() => Promise.resolve(result));
-      await bannerController.findById(123);
-      expect(spy).toHaveBeenCalledWith(123);
-    });
-  });
-
-  describe('createBanner', () => {
-    it('find Banner with current date', async () => {
-      const result: Banner = generateBanner();
-      const spy = jest.spyOn(bannerService, 'create').mockImplementation(() => Promise.resolve(result));
-      expect(await bannerController.createBanner(result)).toBe(result);
-      expect(spy).toHaveBeenCalledWith(result);
-    });
-  });
-
-  describe('updateBanner', () => {
-    it('find Banner with current date', async () => {
-      const result: Banner = generateBanner();
-      const spy = jest.spyOn(bannerService, 'update').mockImplementation(() => new Promise(jest.fn()));
-      await bannerController.updateBanner(123, result);
-      expect(spy).toHaveBeenCalledWith(123, result);
-  });
-});
-
-  describe('deleteBanner', () => {
-    it('find Banner with current date', async () => {
-      const result: Banner = generateBanner();
-      const spy = jest.spyOn(bannerService, 'delete').mockImplementation(() => new Promise(jest.fn()));
-      await bannerController.deleteBanner(1);
-      expect(spy).toHaveBeenCalledWith(1);
-    });
+  afterAll(async () => {
+    await app.close();
   });
 });

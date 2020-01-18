@@ -28,7 +28,6 @@ export class BannerController {
 
   @Post('')
   async createBanner(@Body() body: Banner) {
-    console.log(body);
     try {
     return await this.bannerService.create(body);
     } catch (e) {
