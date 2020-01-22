@@ -8,14 +8,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { INestApplication } from '@nestjs/common';
 
 describe('BannerController', () => {
-  type MockType<T> = {
-    [P in keyof T]: jest.Mock<{}>;
-  };
-  // const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(() => ({
-  //   findOne: jest.fn(entity => entity),
-  //   // ...
-  // }));
-  // let repositoryMock: MockType<Repository<Banner>>;
   let app: INestApplication;
   const myTestsService = {
     findCurrent: () => {
@@ -107,6 +99,19 @@ describe('BannerController', () => {
         expect(res.body).toStrictEqual({ status: 'created' });
       });
   });
+
+  it(`/POST banner returns proper error if post object is wrong`, async () => {
+    return await request(app.getHttpServer())
+      .post('/api/banner')
+      .send('')
+      .set('Accept', 'application/json')
+      .then((res) => {
+        expect(res.status).toBe(201);
+        console.log(res)
+
+        expect(res.body).toStrictEqual({ status: 'created' });
+      });
+  });
   it(`/PUT banner by id`, async () => {
     return await request(app.getHttpServer())
       .put('/api/banner/1')
@@ -124,7 +129,7 @@ describe('BannerController', () => {
       });
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 });

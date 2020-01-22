@@ -1,10 +1,7 @@
 import { BannerService } from './service';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { Banner } from './entity';
 import { mockBanners } from '../../test/mockBanners';
-import { BannerController } from './controller';
 import { TestingModule, Test } from '@nestjs/testing';
-import { Repository } from 'typeorm';
 describe('BannerService', () => {
   let testingModule: TestingModule;
   let service: BannerService;
