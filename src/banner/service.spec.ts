@@ -70,7 +70,7 @@ describe('BannerService', () => {
     expect(spyBannerService.delete).toHaveBeenCalledWith(1);
   });
 
-  it('should invoke findCurrent from BannerService', async () => {
+  it('should invoke update from BannerService', async () => {
     const updateBanner = {
       id: 1,
       bannerId: 12156,

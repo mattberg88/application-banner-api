@@ -58,6 +58,14 @@ describe('BannerController', () => {
         expect(res.body).toStrictEqual(mockBanners[0]);
       });
   });
+  it(`/GET current banner return 400 if error`, async () => {
+    return await request(app.getHttpServer())
+      .get('/api/banner')
+      .end((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body).toStrictEqual(mockBanners[0]);
+      });
+  });
   it(`/GET list of all banners`, async () => {
     return await request(app.getHttpServer())
       .get('/api/banner/list')
