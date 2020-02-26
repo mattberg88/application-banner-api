@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigService, InjectConfig } from 'nestjs-config';
+import { Banner } from 'src/banner/banner.entity';
 
 @Injectable()
 export class FmsConfig
@@ -26,7 +27,7 @@ export class FmsConfig
       port: parseInt(this.config.get('pg.port'), 10),
       username: this.config.get('pg.username'),
       password: this.config.get('pg.password'),
-      entities: [process.env.ENTITIES],
+      entities: [Banner],
     };
   }
 }

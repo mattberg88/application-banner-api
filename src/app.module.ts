@@ -1,20 +1,21 @@
-import { Module, MiddlewareConsumer, RequestMethod, Logger } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as path from 'path';
-
-import { ConfigModule, ConfigService } from 'nestjs-config';
+import { ConfigModule } from 'nestjs-config';
+import { BannerModule } from './banner/banner.module';
+import { FmsConfig } from './config/FmsConfig';
 
 @Module({
   imports: [
-    ConfigModule.load(path.resolve(__dirname, 'config', '**', '!(*.d).{ts,js}'), {
+    ConfigModule.load(path.resolve(__dirname, 'config', '**/!(*.d).{ts,js}'), {
       path: path.resolve(
         __dirname,
         `../env/${process.env.NODE_ENV || 'development'}.env`,
       ),
     }),
+    BannerModule,
     TypeOrmModule.forRootAsync({
-      useFactory: (config: ConfigService) => config.get('pg'),
-            inject: [ConfigService],
+      useClass: FmsConfig,
     }),
   ],
 })
