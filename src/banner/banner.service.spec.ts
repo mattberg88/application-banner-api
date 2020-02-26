@@ -1,5 +1,5 @@
-import { BannerService } from './service';
-import { Banner } from './entity';
+import { BannerService } from './banner.service';
+import { Banner } from './banner.entity';
 import { mockBanners } from '../../test/mockBanners';
 import { TestingModule, Test } from '@nestjs/testing';
 describe('BannerService', () => {

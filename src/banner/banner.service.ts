@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult, DeleteResult } from 'typeorm';
-import { Banner } from './entity';
+import { Banner } from './banner.entity';
 
 @Injectable()
 export class BannerService {

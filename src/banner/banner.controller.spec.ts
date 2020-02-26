@@ -1,9 +1,9 @@
-import { BannerController } from './controller';
+import { BannerController } from './banner.controller';
 import * as request from 'supertest';
 import { mockBanners } from '../../test/mockBanners';
-import { BannerService } from './service';
+import { BannerService } from './banner.service';
 import { Test } from '@nestjs/testing';
-import { Banner } from './entity';
+import { Banner } from './banner.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { INestApplication } from '@nestjs/common';
 

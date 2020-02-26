@@ -1,6 +1,6 @@
 import { Controller, HttpException, HttpStatus, Query, Param, Get, Post, Body, Put, Delete } from '@nestjs/common';
-import { BannerService } from './service';
-import { Banner } from './entity';
+import { BannerService } from './banner.service';
+import { Banner } from './banner.entity';
 
 @Controller('api/banner')
 export class BannerController {
